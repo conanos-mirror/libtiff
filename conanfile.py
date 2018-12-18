@@ -44,7 +44,10 @@ class LibtiffConan(ConanFile):
         cmake.install()
 
     def package(self):
-        pass
+        if self.options.shared:
+            replacements = {"-ltiff": "-ltiffd"}
+            for s, r in replacements.items():
+                tools.replace_in_file(os.path.join(self.package_folder,"lib","pkgconfig", "libtiff-4.pc"),s,r)
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
